@@ -338,7 +338,7 @@ def get_operation(location: str, operation_name: str) -> operations_pb2.Operatio
     Gets Long Running Operation details.
     Args:
         location (str): Location of the operation.
-        operation_name (str): Name of the operation.  
+        operation_name (str): Name of the operation.
     Returns:
         operations_pb2.Operation: Long Running Operation details.
     """
@@ -671,7 +671,7 @@ def get_entire_row(
                 if col_type == ["number"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern='''(^\(\d+\))|(\d+[,|]\d+)|(^\(\d+,\d+\))|(\d+)''',
+                        pattern='(^\(\\d+\))|(\\d+[,|]\\d+)|(^\(\\d+,\\d+\\))|(\\d+)',
                     )
                 elif col_type == ["%"]:
                     block_text = get_matched_field(
@@ -684,7 +684,7 @@ def get_entire_row(
                 elif col_type == ["code"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern='''([0-9]+\.[0-9]+\/[0-9]+\.[0-9]+)|([0-9]+\.[0-9]+)''',
+                        pattern='([0-9]+\\.[0-9]+/[0-9]+\\.[0-9]+)|([0-9]+\\.[0-9]+)',
                     )
                 elif column != "taxonomy_disclosure":
                     block_text = (
@@ -760,7 +760,16 @@ def get_table_data(
             block_text = layout_to_text(block.layout, document_fp.text)
             if not is_table_region(block.layout, ystart, yend, height):
                 continue
-            activity = re.search(r"(^\d.\d+(.|) [a-zA-Z\s]+)|(^Total)|(^Sum[a-zA-Z1-9\.+\s]+)|(^Revenue ([a-z]+))|(^[A-Z]\.[1-9|\s][a-zA-Z0-9\s\.-]+)|(^OPEX ([a-z]+))|(^CAPEX ([a-z]+))|(^Taxonomy ([a-z]+)|^[A-Z]+[a-z]+)",
+            activity = re.search(
+                r"(^\d.\d+(.|) [a-zA-Z\s]+)|"
+                "(^Total)|"
+                "(^Sum[a-zA-Z1-9\.+\s]+)|"
+                "(^Revenue ([a-z]+))|"
+                "(^[A-Z]\.[1-9|\s][a-zA-Z0-9\s\.-]+)|"
+                "(^OPEX ([a-z]+))|"
+                "(^CAPEX ([a-z]+))|"
+                "(^Taxonomy ([a-z]+)|"
+                "^[A-Z]+[a-z]+)",
                 block_text,
             )
             if activity:
@@ -960,7 +969,7 @@ def walk_the_ocr(
         fp_document = read_json_output(
             output_bucket=gcs_output_bucket, output_prefix=fp_document_path
         )
-        df = run_table_extractor_pipeline(
+        run_table_extractor_pipeline(
             offset=offset,
             project_id=project_id,
             location=location,
@@ -971,7 +980,6 @@ def walk_the_ocr(
             filen=file,
             ycord=y_coord,
         )
-        # print("$$$$####$$$$")
 
 
 def enhance_and_save_pdfs(
