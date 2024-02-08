@@ -298,9 +298,7 @@ def get_coordinates_map(
                 y = round(coord.y * height)
                 if entity.type_ == "activity":
                     ycd = max(ycd, y)
-                elif (
-                    entity.type_ == "taxonomy_disclosure"
-                ):
+                elif entity.type_ == "taxonomy_disclosure":
                     row_coords.append(x)
                     y = round(coord.y * height)
                     ycd = max(ycd, y)
