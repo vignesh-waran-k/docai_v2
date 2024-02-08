@@ -671,11 +671,11 @@ def get_entire_row(
                 if col_type == ["number"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern="(^\(\\d+\))|(\\d+[,|]\\d+)|(^\(\\d+,\\d+\\))|(\\d+)",
+                        pattern=r"(^\(\d+\))|(\d+[,|]\d+)|(^\(\d+,\d+\))|(\d+)",
                     )
                 elif col_type == ["%"]:
                     block_text = get_matched_field(
-                        block_text, pattern = "([0-9]+)|([0-9]+[|%])([0-9]+[|%])"
+                        block_text, pattern = r"([0-9]+)|([0-9]+[|%])([0-9]+[|%])"
                     )
                 elif block_text.replace("\n", "") in ["Y", "N", "N/A", "S", "n/a"]:
                     block_text = get_matched_field(
@@ -684,7 +684,7 @@ def get_entire_row(
                 elif col_type == ["code"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern="([0-9]+\.[0-9]+/[0-9]+\.[0-9]+)|([0-9]+\.[0-9]+)",
+                        pattern=r"([0-9]+\.[0-9]+\/[0-9]+\.[0-9]+)|([0-9]+\.[0-9]+)",
                     )
                 elif column != "taxonomy_disclosure":
                     block_text = (
