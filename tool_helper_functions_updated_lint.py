@@ -964,8 +964,8 @@ def walk_the_ocr(
             # row_map=row_map_cde,
             # filen=file,
             # ycord=y_coord,
-        )
-        print("$$$$####$$$$")
+        # )
+        # print("$$$$####$$$$")
 
 
 def enhance_and_save_pdfs(
