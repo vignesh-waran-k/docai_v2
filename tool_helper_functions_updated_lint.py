@@ -675,7 +675,7 @@ def get_entire_row(
                     )
                 elif col_type == ["%"]:
                     block_text = get_matched_field(
-                        block_text, pattern = r"([0-9]+)|([0-9]+[|%])([0-9]+[|%])"
+                        block_text, pattern=r"([0-9]+)|([0-9]+[|%])([0-9]+[|%])"
                     )
                 elif block_text.replace("\n", "") in ["Y", "N", "N/A", "S", "n/a"]:
                     block_text = get_matched_field(
