@@ -15,12 +15,13 @@
 import math
 import re
 import time
-import numpy as np
-import pandas as pd
-import PyPDF2
 from collections import defaultdict
 from io import BytesIO
 from typing import DefaultDict, Dict, List, MutableSequence, Tuple, Union
+
+import numpy as np
+import pandas as pd
+import PyPDF2
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import InternalServerError, RetryError
 from google.cloud import documentai, storage
