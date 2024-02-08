@@ -15,13 +15,12 @@
 import math
 import re
 import time
-from collections import defaultdict
-from io import BytesIO
-from typing import DefaultDict, Dict, List, MutableSequence, Tuple, Union
-
 import numpy as np
 import pandas as pd
 import PyPDF2
+from collections import defaultdict
+from io import BytesIO
+from typing import DefaultDict, Dict, List, MutableSequence, Tuple, Union
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import InternalServerError, RetryError
 from google.cloud import documentai, storage
@@ -29,6 +28,7 @@ from google.longrunning import operations_pb2
 from google.longrunning.operations_pb2 import GetOperationRequest
 from PIL import Image as PilImage
 from PIL import ImageDraw
+
 
 def batch_process_documents(
     project_id: str,
@@ -264,7 +264,7 @@ def get_coordinates_map(
     Args:
         document(documentai.Document): Document containing information.
     Returns:
-        Tuple[Dict[int, List[List[int]]],Dict[int, List[int]],Dict[int, Dict[str, List[int]]],Dict[int, List[int]]]   
+        Tuple[Dict[int, List[List[int]]],Dict[int, List[int]],Dict[int, Dict[str, List[int]]],Dict[int, List[int]]]
     """
 
     # row_keywords = {"taxonomy", "total", "sum", "economic", "taxonomy-eligible", "taxonomy-non-eligible"}
@@ -323,7 +323,6 @@ def get_coordinates_map(
         # store the min col y of table
         if ycd_min != math.inf:
             max_ycd.append(math.ceil(ycd_min))
-            
         x_coordinates.sort(key=lambda x: x[0])
         x_coordinates_[pn] = x_coordinates
         y_coord.sort()
@@ -339,8 +338,7 @@ def get_operation(location: str, operation_name: str) -> operations_pb2.Operatio
     Gets Long Running Operation details.
     Args:
         location (str): Location of the operation.
-        operation_name (str): Name of the operation.
-        
+        operation_name (str): Name of the operation.  
     Returns:
         operations_pb2.Operation: Long Running Operation details.
     """
@@ -444,8 +442,7 @@ def parse_document_tables(output_bucket, output_prefix, output_csv_prefix):
         output_prefix (str): Prefix for the output files.
         output_csv_prefix (str): Prefix for the CSV files to be created.
     """
-    
-    storage_client = storage.Client()
+    # storage_client = storage.Client()
     # bucket = storage_client.bucket(output_bucket)
     # Read the document
     doc_obj_dict = read_json_output(
@@ -469,6 +466,7 @@ def parse_document_tables(output_bucket, output_prefix, output_csv_prefix):
                 )
                 df.to_csv(f"gs://{output_bucket}/{output_filename}", index=False)
 
+
 def get_hitl_state(hitl_status_response: operations_pb2.Operation) -> Tuple[bool, str]:
     """
     Returns the HITL state and gcs output path if the document is reviewed.
@@ -487,6 +485,7 @@ def get_hitl_state(hitl_status_response: operations_pb2.Operation) -> Tuple[bool
     if hitl_status == "REJECTED":
         return False, ""
     return True, hitl_destination
+
 
 def parse_and_split_pages(
     individual_process_statuses: MutableSequence[
@@ -579,6 +578,7 @@ def parse_and_split_pages(
             f"Pages {', '.join(map(str, taxonomy_page_no))} have been extracted to {output_pdf_blob.path}."
         )
 
+
 def get_column_name_type_using_xcoord(
     value: int, processed_map: Dict[str, List[int]]
 ) -> Tuple[Union[str, None], Union[List[str], None]]:
@@ -606,6 +606,7 @@ def get_column_name_type_using_xcoord(
             else:
                 return col, None
     return None, None
+
 
 def get_entire_row(
     page: documentai.Document.Page,
@@ -670,7 +671,7 @@ def get_entire_row(
                 if col_type == ["number"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern="(^\(\d+\))|(\d+[,|]\d+)|(^\(\d+,\d+\))|(\d+)",
+                        pattern='''(^\(\d+\))|(\d+[,|]\d+)|(^\(\d+,\d+\))|(\d+)''',
                     )
                 elif col_type == ["%"]:
                     block_text = get_matched_field(
@@ -683,7 +684,7 @@ def get_entire_row(
                 elif col_type == ["code"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern="([0-9]+\.[0-9]+\/[0-9]+\.[0-9]+)|([0-9]+\.[0-9]+)",
+                        pattern='''([0-9]+\.[0-9]+\/[0-9]+\.[0-9]+)|([0-9]+\.[0-9]+)''',
                     )
                 elif column != "taxonomy_disclosure":
                     block_text = (
@@ -701,6 +702,7 @@ def get_entire_row(
                         dest_df.loc[idx, column] = "-\n" + block_text
                     # else:
                     #   dest_df.loc[idx, column] = block_text
+
 
 def is_table_region(
     layout: documentai.Document.Page.Layout, ystart: int, yend: int, height: float
@@ -724,6 +726,7 @@ def is_table_region(
     if min_y >= ystart and max_y <= yend:
         return True
     return False
+
 
 def get_table_data(
     document_fp: documentai.Document,
@@ -775,6 +778,7 @@ def get_table_data(
         df_list[pgn] = dest_df3
     return df_list
 
+
 def update_data(
     final_df_: pd.DataFrame, final_data_: DefaultDict[str, List[str]], ea: str
 ) -> DefaultDict[str, List[str]]:
@@ -794,6 +798,7 @@ def update_data(
         else:
             final_data_[column].append("")
     return final_data_
+
 
 def post_process(
     dest_df: pd.DataFrame, col: str, processed_map: Dict[str, List[int]]
@@ -844,7 +849,7 @@ def post_process(
                 try:
                     if re.search(r"^[0-9]+(.|,)[0-9]+", val):
                         split_row.append(val)
-                except:
+                except ValueError:
                     pass
             n = len(split_row)
             for column in final_df_.columns:
@@ -864,12 +869,13 @@ def post_process(
                             val = val.replace("-", "").strip()
 
                         final_data_[column].extend([val])
-                except:
+                except ValueError:
                     final_data_[column].extend([np.nan] * n)
-        except:
+        except ValueError:
             ea_ = row["taxonomy_disclosure"].replace("\n", " ")
             final_data_ = update_data(final_df_, final_data_, ea_)
     return final_data_
+
 
 def run_table_extractor_pipeline(
     offset: int,
@@ -954,17 +960,17 @@ def walk_the_ocr(
         fp_document = read_json_output(
             output_bucket=gcs_output_bucket, output_prefix=fp_document_path
         )
-        # df = run_table_extractor_pipeline(
-            # offset=offset,
-            # project_id=project_id,
-            # location=location,
-            # gcs_output_bucket=gcs_output_bucket,
-            # gcs_output_uri_prefix=gcs_output_uri_prefix,
-            # document_fp=fp_document[file[:-4]],
-            # row_map=row_map_cde,
-            # filen=file,
-            # ycord=y_coord,
-        # )
+        df = run_table_extractor_pipeline(
+            offset=offset,
+            project_id=project_id,
+            location=location,
+            gcs_output_bucket=gcs_output_bucket,
+            gcs_output_uri_prefix=gcs_output_uri_prefix,
+            document_fp=fp_document[file[:-4]],
+            row_map=row_map_cde,
+            filen=file,
+            ycord=y_coord,
+        )
         # print("$$$$####$$$$")
 
 
@@ -1095,7 +1101,7 @@ def enhance_and_save_pdfs(
                 pdf_stream.getvalue(), content_type="application/pdf"
             )
             print(f"Done Processing -{file_key}.pdf")
-        except:
+        except ValueError:
             import traceback
 
             print(traceback.format_exc())
