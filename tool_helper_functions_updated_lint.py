@@ -671,11 +671,11 @@ def get_entire_row(
                 if col_type == ["number"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern='(^\(\\d+\))|(\\d+[,|]\\d+)|(^\(\\d+,\\d+\\))|(\\d+)',
+                        pattern="(^\(\\d+\))|(\\d+[,|]\\d+)|(^\(\\d+,\\d+\\))|(\\d+)",
                     )
                 elif col_type == ["%"]:
                     block_text = get_matched_field(
-                        block_text, pattern="([0-9]+)|([0-9]+[|%])([0-9]+[|%])"
+                        block_text, pattern = "([0-9]+)|([0-9]+[|%])([0-9]+[|%])"
                     )
                 elif block_text.replace("\n", "") in ["Y", "N", "N/A", "S", "n/a"]:
                     block_text = get_matched_field(
@@ -684,7 +684,7 @@ def get_entire_row(
                 elif col_type == ["code"]:
                     block_text = get_matched_field(
                         block_text,
-                        pattern='([0-9]+\\.[0-9]+/[0-9]+\\.[0-9]+)|([0-9]+\\.[0-9]+)',
+                        pattern="([0-9]+\.[0-9]+/[0-9]+\.[0-9]+)|([0-9]+\.[0-9]+)",
                     )
                 elif column != "taxonomy_disclosure":
                     block_text = (
@@ -763,9 +763,9 @@ def get_table_data(
             activity = re.search(
                 r"(^\d.\d+(.|) [a-zA-Z\s]+)|"
                 "(^Total)|"
-                "(^Sum[a-zA-Z1-9\.+\s]+)|"
+                "(^Sum[a-zA-Z1-9\\.+\\s]+)|"
                 "(^Revenue ([a-z]+))|"
-                "(^[A-Z]\.[1-9|\s][a-zA-Z0-9\s\.-]+)|"
+                "(^[A-Z]\\.[1-9|\\s][a-zA-Z0-9\\s\\.-]+)|"
                 "(^OPEX ([a-z]+))|"
                 "(^CAPEX ([a-z]+))|"
                 "(^Taxonomy ([a-z]+)|"
