@@ -1,18 +1,77 @@
+---
+#################################
+#################################
+## Super Linter GitHub Actions ##
+#################################
+#################################
 name: Lint Code Base
 
-on: [push]
+#
+# Documentation:
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+#
 
+#############################
+# Start the job on all push #
+#############################
+on:
+  push:
+    branches-ignore: [main]
+    # Remove the line above to run when pushing to master
+  pull_request:
+    branches: [main]
+
+permissions: read-all
+
+###############
+# Set the Job #
+###############
 jobs:
-  super-lint:
-    name: Run Super-Linter
+  build:
+    # Name the Job
+    name: Lint Code Base
+    # Set the agent to run on
     runs-on: ubuntu-latest
 
+    ##################
+    # Load all steps #
+    ##################
     steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
 
-      - name: Run Super-Linter
-        uses: github/super-linter@v4
+      # Super Linter doesn't support Jupyter notebooks
+      - name: Convert notebooks to Python
+        run: find . -type f -name "*.ipynb" -exec jupyter nbconvert --to python --TemplateExporter.exclude_markdown=true {} \;
+
+      - name: Convert notebooks to Markdown
+        run: find . -type f -name "*.ipynb" -exec jupyter nbconvert --to markdown --TemplateExporter.exclude_code_cell=true {} \;
+
+      ################################
+      # Run Linter against code base #
+      ################################
+      - name: Lint Code Base
+        uses: super-linter/super-linter/slim@v6
         env:
-          VALIDATE_PYTHON: true
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JAVA_FILE_NAME: "google_checks.xml"
+          JAVASCRIPT_DEFAULT_STYLE: prettier
+          LOG_LEVEL: WARN
+          SHELLCHECK_OPTS: -e SC1091 -e 2086
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_ENV: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYTHON_ISORT: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_CSS: false
+          VALIDATE_GO: false
+          FILTER_REGEX_EXCLUDE: noxfile\.py
