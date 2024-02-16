@@ -10,7 +10,7 @@ This tool uses parsed json files and a list of entities which have PII data and 
 * **GCS_output_path** : GCS Output Path. The updated synthesized data in the pdf.
 * **PII_Entities** : Entities for which the mentiontext has to be redacted and replaced with synthetic data given in the excel
 
-# Output Details
+## Output Details
 
 * The New pdf documents with synthesized data will be saved in GCS_output_path
 * Entities will be redacted and pdf will be saved in the GCS output folder provided.
