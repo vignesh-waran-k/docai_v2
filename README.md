@@ -5,10 +5,10 @@ This document is to deal with the CDE trained using invoices and has issues in u
 ## Input Details
 
 * **gcs_input_path**: This contains the storage bucket path of the input files.
-* **gcs_output_path**: This contains the storage bucket path of the output files.   
-* **project_id**: This contains the project ID of the project.  
-* **invoice_processor_id**: This is the processor ID of the invoice processor.                 
-* **location_processor**: This contains the location/region of the processor. 
+* **gcs_output_path**: This contains the storage bucket path of the output files.
+* **project_id**: This contains the project ID of the project.
+* **invoice_processor_id**: This is the processor ID of the invoice processor.
+* **location_processor**: This contains the location/region of the processor.
 
 ## Output Details
 
