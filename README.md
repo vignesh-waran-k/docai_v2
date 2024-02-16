@@ -4,8 +4,8 @@ The purpose of this document is to provide instructions and a Python script for 
 
 ## Input Details
 
-* **project_id** : Your Google project id or name
-* **processor_id** : Processor id with can be found on processor detail tab in gcp UI.
+* **project_id** : Your Google project ID or name
+* **processor_id** : Processor ID with can be found on processor detail tab in gcp UI.
 * **input_dir** : The path of the folder containing the image files to be processed, with the bucket name ending with slash(/).
 (Eg : gs://bucket_name/folder_name/)
 * **processor_output_dir** : The path of the output folder of the processor with the bucket name and without ending with slash(/).
@@ -21,5 +21,5 @@ Provide the same random folder name in **parser_output_folder_name** variable.
 
 ## Output Details
 
-The script after execution creates a CSV file containing a list of file names with all the fraud detected on the document . The script also generates the percentage of Total Fraudulent and Non Fraudulent documents at the end.
+The script after execution creates a CSV file containing a list of filenames with all the fraud detected on the document . The script also generates the percentage of Total Fraudulent and Non Fraudulent documents at the end.
 
