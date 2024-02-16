@@ -16,7 +16,7 @@ To Manage key through Python Jupyter notebook ,the service account which is used
 
 2.Key ring is mandatory to create a CMEK key. These are the inputs required for key ring creation:
 
-* **Project_id** : Project id of the project
+* **Project_id** : Project ID of the project
 * **Location_id** : Location of the CMEK key to be created
 * **Key_ring_id** : Unique key name has to be provided for the new key ring
 
@@ -24,7 +24,7 @@ To Manage key through Python Jupyter notebook ,the service account which is used
 
 4.Creates a new key in Cloud KMS that automatically rotates.
 
-### After creating GCS bucket, processor creation, training/transmission of data from old processor to new processor we need to destroy the created key.
+### After creating GCS bucket, processor creation, training/transmission of data from old processor to new processor we need to destroy the created key
 
 5.Once we destroy a key we can retrieve and enable the key within 24 hours by default. Any data encrypted with this key version will not be recoverable after 24 hours of destroying.
 
