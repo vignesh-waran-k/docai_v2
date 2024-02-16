@@ -12,6 +12,6 @@ This document is to deal with the CDE trained using invoices and has issues in u
 
 ## Output Details
 
-The output jsons are similar to the invoice parser jsons(only in terms of line items) and HITL triggered using invoice parser end point
+The output jsons are similar to the invoice parser jsons(only in terms of line items) and HITL triggered using invoice parser endpoint
 
 <img src="./Images/HITL_output_1.png" width=800 height=400 alt="HITL Output Image"></img>
