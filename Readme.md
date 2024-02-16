@@ -1,12 +1,4 @@
-# Key Value Pair Entity Conversion
-
-
-## Disclaimer
-
-This tool is not supported by the Google engineering team or product team. It is provided and supported on a best-effort basis by the DocAI Incubator Team. No guarantees of performance are implied.
-
-
-## Purpose and Description
+# Purpose and Description
 This document provides instructions for sorting the entities from top to bottom as it is in documents from parser output.This document provides the function taking json as input from parser and returns a sorted json.
 
 
