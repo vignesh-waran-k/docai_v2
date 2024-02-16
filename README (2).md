@@ -21,4 +21,4 @@ This code facilitates sending an image to a specified Vertex object detection mo
 * **file_path** : "path/to/your/image.png"  # Specify the file path to your image
 
 ### Output
-<img src="./images/output.png" width=800 height=400 alt="None">
+<img src="./images/output.png" width=800 height=400 alt="Output Image">
