@@ -2,7 +2,9 @@
 
 ## Overview of Document AI Toolkit - Asynchronous
 
-The objective is to develop a document ai toolkit but this time instead of “Synchronous API” , **Asynchronous API** must be used  to increase the capabilities of the original document ai toolkit. This tool should be capable of ingesting a number of documents,  batching the documents in the count of 50s, processing and providing the status for monitoring. This solution is packaged and made available to you. You  also can take advantage of automated deployment without having to set up their environment and create each of the services which are utilized in this approach.
+The objective is to develop a document ai toolkit but this time instead of “Synchronous API” , **Asynchronous API** must be used  to increase the capabilities of the original document ai toolkit.
+This tool should be capable of ingesting a number of documents,  batching the documents in the count of 50s, processing and providing the status for monitoring. This solution is packaged and made available to you.
+You  also can take advantage of automated deployment without having to set up their environment and create each of the services which are utilized in this approach.
 
 ## Technology Overview
 
@@ -21,11 +23,12 @@ The above diagram highlights the overall architecture of DocumentAI Toolkit Asyn
 * **Documentation Ingestion & Services Initialization**: In this step, you are expected to run an initializer script that orchestrates required GCP services - Storage bucket, DocAI, Cloud Functions, Scheduler and Firestore. Also in this step,your  files are  input to the Cloud storage bucket for processing further. This is achieved by shell script which ensures the environment is set up automatically.
   * **Cloud Shell** : You need to run the provided shell script. This eliminates workarounds like manual setup of each service involved for this activity.
   * **Cloud Storage**: This is storage bucket where your  files are landed
-* **Scheduled Async batch processing** : Processing (async batching) happens in this step. The Cloud Functions are triggered to perform the processing of the landed files from the Storage bucket of the previous step. Here, the files are grouped in batches of 50 and get processed concurrently. Next step is logging the activity and storing the data for visualization. The scheduler aids in automation of repeated workflow of this entire process i.e., from files ingestion to processing to logging.
+* **Scheduled Async batch processing** : Processing (async batching) happens in this step. The Cloud Functions are triggered to perform the processing of the landed files from the Storage bucket of the previous step. Here, the files are grouped in batches of 50 and get processed concurrently.
+     Next step is logging the activity and storing the data for visualization. The scheduler aids in automation of repeated workflow of this entire process i.e., from files ingestion to processing to logging.
   * **Cloud Functions gen2** : This service helps in running the python script where the core async batch processing logic is implemented.
   * **Cloud Storage** : a temporary directory is created to track every processing activity.
   * **Cloud scheduler** : Ensures the cloud functions are triggered automatically every hour.
-* **Logging and Visualization**: With the help of a firestore database, datapoints such as status, output path, operation id, timestamps are logged for every run. Data visualization can also be provided for the insights.
+* **Logging and Visualization**: With the help of a firestore database, datapoints such as status, output path, operation_id, timestamps are logged for every run. Data visualization can also be provided for the insights.
   * **Firestore Database**: This is a document database that stores key:value pairs. Data about each run logged in this database for  this context.
   * **Cloud Storage** : After async processing, the final output files are stored in the bucket in batch per batch.
 
@@ -69,13 +72,14 @@ The above diagram highlights the architecture and the each steps are explained:
 2. Landing bucket to store your  input files
     * In this step, you have  their input files located in the Input Bucket and considered for further processing.
 3. Cloud Function (gen2) for Async Batch processing
-    * Cloud Function gen2 contains the python script to perform async batch processing for the input files present in the landing bucket. The script first checks the logs(at 4) saved in Firestore and considers only files not processed earlier from the landing bucket, loads the files processing bucket, run the main async batch processing for the documents and save in the output bucket and finally log the activity in the Firestore Database.
+    * Cloud Function gen2 contains the python script to perform async batch processing for the input files present in the landing bucket. The script first checks the logs(at 4) saved in Firestore and considers only files not processed earlier from the landing bucket, loads the files processing bucket,
+       run the main async batch processing for the documents and save in the output bucket and finally log the activity in the Firestore Database.
 4. Firestore Database for logging
-    * Firestore is a Document Database which saves data in key:value pairs for every run as logs. Timestamp, status, filename and operation ID data are logged for each run.
+    * Firestore is a Document Database which saves data in key:value pairs for every run as logs. Timestamp, status, filename and operation_id data are logged for each run.
 5. Processing bucket
     * For every run, a temporary cloud storage bucket is maintained which is a processing bucket. This bucket holds files to be processed. As highlighted earlier, the processing bucket is going to store files which were not processed earlier. This is known from logs present in the Firestore. The processing bucket holds files in batch count of 50s. This bucket is truncated for every run.
 6. Result bucket
-    * This is the output storage bucket. It contains all of the output processed files for every run under the created directory named after the operation run ID.
+    * This is the output storage bucket. It contains all of the output processed files for every run under the created directory named after the operation run_id.
 7. Cloud scheduler
     * Cloud scheduler repeats Steps 2 to Step 6. Scheduler triggers the cloud function using the HTTP URL. The job is scheduled to run every 1 hour.
 
@@ -101,7 +105,7 @@ Installer is a .zip file containing
 * Shell Script
 * Python Script
 * Requirements.txt file
-The Shell Script needs to be executed first. Its execution prompts to provide  your Google Cloud details like project name, project ID, location and output file name. This creates, configure and deploy the necessary services:
+The Shell Script needs to be executed first. Its execution prompts to provide  your Google Cloud details like project name, project_id, location and output filename. This creates, configure and deploy the necessary services:
 * Cloud Storage Buckets
 * Invoice Processor
 * Cloud Functions gen2
@@ -216,7 +220,7 @@ Download the [INPUT FILES](https://drive.google.com/drive/folders/1wZjCcCQG50GiM
     * **BUCKET_NAME** : input bucket name where the initial documents are saved and processed later, its value is `daira_shell_input06`(don't change this value)
     * **SCHEDULER_ACCOUNT_NAME** : name of the service account and it is utilized for authenticating the services which are deployed.
     * **SCHEDULER_NAME** : name for the cloud scheduler service.
-    * **PROCESSOR_ID** : to make use of existing Document AI processor, use this parameter and populate the processor id. If a new processor needs to be deployed then leave it blank.
+    * **PROCESSOR_ID** : to make use of existing Document AI processor, use this parameter and populate the processor_id. If a new processor needs to be deployed then leave it blank.
     * **PROCESSOR_NAME** : this parameter takes the name of the Document AI processor to be created with the input name.
     * **PROCESSOR_TYPE** : which Document AI processor type to be deployed is specified here.
     * **OUTPUT_BUCKET_NAME** : this parameter is used for naming the deployed storage bucket. Here it refers to the storage output bucket.
@@ -251,7 +255,7 @@ Download the [INPUT FILES](https://drive.google.com/drive/folders/1wZjCcCQG50GiM
     * This folder contains two files which are pushed to Cloud Functions gen2. The files inside this folder are namely ‘main.py’ and ‘requirements.txt’.
     * main.py is the main script where the logic is implemented and the requirements.txt is a text file where the dependencies are defined.
   * **input_files/** :
-    * This is the folder where you can place  their n number of files to process. For example, you can place 10 to 100s of pdf documents inside this folder.
+    * This is the folder where you can place  their n number of files to process. For example, you can place 10 to 100s of PDF documents inside this folder.
   * **deployer.sh** :
     * This is a shell script that automatically configures and deploys necessary cloud services. More about this in the following points.
 * Run the shell script.
